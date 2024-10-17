@@ -21,6 +21,7 @@ CREATE TABLE `currentgame` (
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
+  `passwort` varchar(255) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vorname` varchar(255) NOT NULL,
   `nachname` varchar(255) NOT NULL,
@@ -30,4 +31,4 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
--- 2024-10-16 08:31:58
+-- 2024-10-17 10:24:31
