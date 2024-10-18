@@ -5,6 +5,7 @@ $user = htmlspecialchars($_POST['user']);
 
 if(test_active_user == true) {
     if(test_free_column == true) {
+        $zugnumnmer = get_max_zugnummer();
         add_to_column();
         setField($column);   
     }
@@ -23,7 +24,25 @@ function test_active_user() {
 }
 
 function get_max_zugnummer() {
-    
+    $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
+
+
+    if ($connection->connect_error) {
+        die("Verbindung fehlgeschlagen: " . $connection->connect_error);
+    }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+   
+        $sql = "SELECT max(zugnummer) FROM currentgame";
+        $stmt = $connection->prepare($sql);    
+        $stmt->execute();
+        $result= $stmt->get_result();
+        $stmt->close();
+
+        return $result +1;
+
+
+
+    }
 }
 
 //überprüft, ob die angegebene Spalte bereits voll ist
