@@ -1,5 +1,4 @@
 -- Adminer 4.8.1 MySQL 5.5.5-10.4.21-MariaDB-log dump
-
 SET NAMES utf8;
 SET time_zone = '+00:00';
 SET foreign_key_checks = 0;
@@ -23,8 +22,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `passwort` varchar(255) NOT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `vorname` varchar(255) NOT NULL,
-  `nachname` varchar(255) NOT NULL,
+  `benutzername` varchar(255) NOT NULL,
   `score` int(11) NOT NULL,
   `url` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
