@@ -1,5 +1,11 @@
 <?php
 
+
+/*die html braucht:
+    id: active user, (this) user, column id (der button)
+    jeder Kreis braucht eine id mit der form columnid || rowid, z.B. 23
+
+*/
 $column = htmlspecialchars($_POST['column']);  //id der column
 $user = htmlspecialchars($_POST['user']);
 
