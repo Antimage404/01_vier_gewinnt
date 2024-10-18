@@ -1,4 +1,5 @@
 <?php 
+session_start(); // Session starten
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -12,9 +13,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['register'])) {
         // Registrierung
         $username = htmlspecialchars($_POST['username']);
-            $password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Passwort hashen
+        $password = password_hash($_POST['password'], PASSWORD_DEFAULT); 
 
-        // Überprüfen, ob der Benutzername bereits existiert
+        // Überprüfen ob Benutzername existiert
         $checkSql = "SELECT * FROM users WHERE benutzername = ?";
         $checkStmt = $connection->prepare($checkSql);
         $checkStmt->bind_param("s", $username);
@@ -45,29 +46,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->execute();
         $result = $stmt->get_result();
 
+        if ($result->num_rows > 0) {
+            $user = $result->fetch_assoc();
+            // Passwortüberprüfung
+            if (password_verify($_POST['password'], $user['passwort'])) {
+                // Session setzen
+                $_SESSION['loggedin'] = true; 
+                $_SESSION['username'] = $user['benutzername'];
 
-
-            if ($result->num_rows > 0) {
-                $user = $result->fetch_assoc();
-                    // Passwortüberprüfung
-                if (password_verify($_POST['password'], $user['passwort'])) {
-                    // Erfolgreiche Anmeldung, Weiterleitung zum Spielfeld
-                    header("Location: spielfeld.php"); // Hier den Pfad zu deinem Spielfeld
-                    exit(); // Beende das Skript, um sicherzustellen, dass keine weitere Ausgabe erfolgt
-                } else {
+                // Redirect zur Spielfeld-Seite
+                header("Location: spielfeld.html");
+                exit(); // Wichtig, um das Script zu beenden
+            } else {
                 echo "<h2>Ungültige Anmeldedaten.</h2>";
-                }
-                    } else {
-                    echo "<h2>Ungültige Anmeldedaten.</h2>";
-                    }
-
-
+            }
+        } else {
+            echo "<h2>Ungültige Anmeldedaten.</h2>";
+        }
 
         $stmt->close();
     }
-} else {
-    echo "Ungültige Anforderung.";
-}
+} 
 
 // Registrierungsformular
 if ($_SERVER["REQUEST_METHOD"] == "GET" || (isset($_POST['register']) && empty($username))) {
@@ -78,11 +77,16 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" || (isset($_POST['register']) && empty($
         Passwort: <input type="password" name="password" required>
         <input type="submit" name="register" value="Registrieren">
     </form>';
+} else {
+    // Anmeldeformular
+    echo '
+    <form method="POST" action="login.php">
+        <h3>Anmeldung</h3>
+        Benutzername: <input type="text" name="username" required>
+        Passwort: <input type="password" name="password" required>
+        <input type="submit" value="Einloggen">
+    </form>';
 }
 
 $connection->close();
 ?>
-
-
-
-

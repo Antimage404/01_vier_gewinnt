@@ -12,34 +12,38 @@
         }
 
         function submitForm(event) {
-            event.preventDefault(); // Verhindert das Neuladen der Seite
+            event.preventDefault(); 
 
             const formData = new FormData(event.target);
             const action = event.target.getAttribute('action');
 
             fetch(action, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.text())
-            .then(data => {
-                // Prüfe, ob die Antwort auf eine erfolgreiche Anmeldung hinweist
-                if (action === "login.php" && data.includes("Willkommen")) {
-                    // Umleitung auf die Spielfeldseite
-                    window.location.href = "spielfeld.php"; 
-                } else {
-                    // Zeigt die Fehlermeldung oder andere Rückmeldungen an
-                    document.getElementById("response").innerHTML = data;
-                }
-            })
-            .catch(error => console.error('Error:', error));
+    method: 'POST',
+    body: formData
+})
+.then(response => response.json()) // JSON-Antwort parsen
+.then(data => {
+    if (data.success) {
+        // Umleitung auf die Spielfeldseite
+        window.location.href = "spielfeld.html"; 
+    } else {
+        // Zeigt die Fehlermeldung oder andere Rückmeldungen an
+        document.getElementById("response").innerHTML = data.message;
+    }
+})
+.catch(error => console.error('Error:', error));
+
+
         }
     </script>
+
+
+
 </head>
 <body>
     <div class="container">
         <h1>4 Gewinnt</h1>
-        <div id="response"></div> <!-- Hier wird die Antwort vom Server angezeigt -->
+        <div id="response"></div> 
 
         <div id="loginForm">
             <h2>Login</h2>
@@ -56,7 +60,7 @@
             <form action="login.php" method="POST" onsubmit="submitForm(event)">
                 <input type="text" name="username" placeholder="Benutzername" required>
                 <input type="password" name="password" placeholder="Passwort" required>
-                <input type="hidden" name="register" value="1"> <!-- Versteckte Eingabe -->
+                <input type="hidden" name="register" value="1"> 
                 <button type="submit">Registrieren</button>
             </form>
             <p>Bereits ein Konto? <a href="javascript:void(0);" onclick="toggleForm()">Hier einloggen</a></p>
