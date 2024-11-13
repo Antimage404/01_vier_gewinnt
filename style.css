@@ -35,6 +35,12 @@ h2 {
     margin-bottom: 15px;
 }
 
+h3 {
+    font-size: 1.5em;
+    color: #333;
+    margin-top: 10px;
+}
+
 input[type="text"],
 input[type="password"] {
     width: 100%;
@@ -67,6 +73,32 @@ button:hover {
     background-color: #0056b3; /* Dunklere Farbe beim Hover */
 }
 
+button1 {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff; /* Hauptfarbe */
+    color: white;
+    border: none;
+    border-radius: 1000px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 50px;
+}
+
+button1:hover {
+    background-color: #0056b3; /* Dunklere Farbe beim Hover */
+}
+
+td {
+    width: 80px;
+    height: 80px;
+    border: 2px solid black;
+    border-radius: 50%;
+    text-align: center;
+    vertical-align: middle;
+}
+
 p {
     margin-top: 15px;
 }
@@ -89,5 +121,4 @@ a:hover {
     font-weight: bold;
     color: #d9534f; /* Farbe für Fehlermeldungen */
 }
-
 
