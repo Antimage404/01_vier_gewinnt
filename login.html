@@ -6,48 +6,38 @@
     <link rel="stylesheet" href="style.css">
     <title>Login</title>
     <script>
+        // Funktion, um zwischen Login- und Registrierungsformular zu wechseln
         function toggleForm() {
-            document.getElementById("loginForm").classList.toggle("hidden");
-            document.getElementById("registerForm").classList.toggle("hidden");
-        }
+            const loginForm = document.getElementById("loginForm");
+            const registerForm = document.getElementById("registerForm");
 
-        function submitForm(event) {
-            event.preventDefault(); 
-
-            const formData = new FormData(event.target);
-            const action = event.target.getAttribute('action');
-
-            fetch(action, {
-    method: 'POST',
-    body: formData
-})
-.then(response => response.json()) // JSON-Antwort parsen
-.then(data => {
-    if (data.success) {
-        // Umleitung auf die Spielfeldseite
-        window.location.href = "spielfeld.html"; 
-    } else {
-        // Zeigt die Fehlermeldung oder andere Rückmeldungen an
-        document.getElementById("response").innerHTML = data.message;
-    }
-})
-.catch(error => console.error('Error:', error));
-
-
+            // Schaltet die Sichtbarkeit der Formulare um
+            loginForm.classList.toggle("hidden");
+            registerForm.classList.toggle("hidden");
         }
     </script>
-
-
-
+    <style>
+        /* Versteckt das nicht aktive Formular */
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <h1>4 Gewinnt</h1>
-        <div id="response"></div> 
 
+        <!-- Fehlermeldungen aus der URL -->
+        <div id="response">
+            <?php if (isset($_GET['error'])): ?>
+                <p class="error"><?= htmlspecialchars($_GET['error']) ?></p>
+            <?php endif; ?>
+        </div>
+
+        <!-- Login-Formular -->
         <div id="loginForm">
             <h2>Login</h2>
-            <form action="login.php" method="POST" onsubmit="submitForm(event)">
+            <form action="login.php" method="POST">
                 <input type="text" name="username" placeholder="Benutzername" required>
                 <input type="password" name="password" placeholder="Passwort" required>
                 <button type="submit">Einloggen</button>
@@ -55,23 +45,17 @@
             <p>Noch kein Konto? <a href="javascript:void(0);" onclick="toggleForm()">Hier registrieren</a></p>
         </div>
 
+        <!-- Registrierungsformular -->
         <div id="registerForm" class="hidden">
             <h2>Registrierung</h2>
-            <form action="login.php" method="POST" onsubmit="submitForm(event)">
+            <form action="login.php" method="POST">
                 <input type="text" name="username" placeholder="Benutzername" required>
                 <input type="password" name="password" placeholder="Passwort" required>
-                <input type="hidden" name="register" value="1"> 
+                <input type="hidden" name="register" value="1">
                 <button type="submit">Registrieren</button>
             </form>
             <p>Bereits ein Konto? <a href="javascript:void(0);" onclick="toggleForm()">Hier einloggen</a></p>
         </div>
     </div>
-
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
 </body>
 </html>
-
