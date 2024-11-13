@@ -1,149 +1,97 @@
 <!DOCTYPE html>
-<html lang="de">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vier Gewinnt</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-            margin: 0;
-        }
-        .game-container {
-            text-align: center;
-        }
-        h1 {
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
-        table {
-            border-collapse: collapse;
-            margin: 20px 0;
-        }
-        td {
-            width: 60px;
-            height: 60px;
-            border: 2px solid #333;
-            text-align: center;
-            vertical-align: middle;
-            cursor: pointer;
-        }
-        .R {
-            background-color: red;
-        }
-        .Y {
-            background-color: yellow;
-        }
-        .empty {
-            background-color: white;
-        }
-        .status {
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
-        .restart-btn {
-            padding: 10px 20px;
-            font-size: 1.2em;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-        .restart-btn:hover {
-            background-color: #45a049;
-        }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <h1>Vier Gewinnt</h1>
+<html>
+    <head> 
+        <title>Vier Gewinnt</title>
+        <style>
+            table {
+                width: 40%;
+                border-collapse: collapse;
+            }
+            td {
+                width: 80px;
+                height: 80px;
+                border: 2px solid black;
+                border-radius: 50%;
+                text-align: center;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Vier Gewinnt</h2>
+        <button id="1" width="60%" height="160">Spalte 1</button>
+        <button id="2" width="60%" height="160">Spalte 2</button>
+        <button id="3" width="60%" height="160">Spalte 3</button>
+        <button id="4" width="60%" height="160">Spalte 4</button>
+        <button id="5" width="60%" height="160">Spalte 5</button>
+        <button id="6" width="60%" height="160">Spalte 6</button>
+        <button id="7" width="60%" height="160">Spalte 7</button>
 
-        <!-- Statusanzeige für den aktuellen Spieler -->
-        <div class="status" id="status">
-            Aktueller Spieler: <span id="current-player">Rot</span>
-        </div>
-
-        <!-- Spielfeld -->
-        <table id="board">
-            <!-- Hier werden die Tabellenzellen dynamisch generiert -->
+        <table>
+            <tr>
+                <td id="16"></td>
+                <td id="26"></td>
+                <td id="36"></td>
+                <td id="46"></td>
+                <td id="56"></td>
+                <td id="66"></td>
+                <td id="76"></td>
+            </tr>
         </table>
-
-        <!-- Button für Neustart -->
-        <button class="restart-btn" onclick="restartGame()">Neues Spiel</button>
-    </div>
-
-    <script>
-        // Initialisierung des Spielfelds
-        const rows = 6;
-        const cols = 7;
-        let currentPlayer = 'R'; // R für Rot, Y für Gelb
-        let board = Array(rows).fill().map(() => Array(cols).fill(''));
-
-        // Spielfeld dynamisch erzeugen
-        const boardElement = document.getElementById('board');
-        function createBoard() {
-            boardElement.innerHTML = ''; // Leeren Inhalt löschen
-            for (let row = 0; row < rows; row++) {
-                const rowElement = document.createElement('tr');
-                for (let col = 0; col < cols; col++) {
-                    const cellElement = document.createElement('td');
-                    cellElement.classList.add('empty');
-                    cellElement.dataset.row = row;
-                    cellElement.dataset.col = col;
-                    cellElement.addEventListener('click', handleCellClick);
-                    rowElement.appendChild(cellElement);
-                }
-                boardElement.appendChild(rowElement);
-            }
-        }
-
-        // Handelt den Klick auf eine Zelle
-        function handleCellClick(event) {
-            const col = event.target.dataset.col;
-            for (let row = rows - 1; row >= 0; row--) {
-                if (board[row][col] === '') {
-                    board[row][col] = currentPlayer;
-                    updateBoard();
-                    if (checkWinner(row, col)) {
-                        alert(currentPlayer === 'R' ? 'Rot gewinnt!' : 'Gelb gewinnt!');
-                        setTimeout(restartGame, 1000);
-                    } else {
-                        currentPlayer = currentPlayer === 'R' ? 'Y' : 'R';
-                        document.getElementById('current-player').textContent = currentPlayer === 'R' ? 'Rot' : 'Gelb';
-                    }
-                    break;
-                }
-            }
-        }
-
-        // Aktualisiert das Spielfeld in der Anzeige
-        function updateBoard() {
-            const cells = document.querySelectorAll('td');
-            cells.forEach(cell => {
-                const row = cell.dataset.row;
-                const col = cell.dataset.col;
-                const player = board[row][col];
-                if (player === 'R') {
-                    cell.classList.add('R');
-                    cell.classList.remove('Y');
-                } else if (player === 'Y') {
-                    cell.classList.add('Y');
-                    cell.classList.remove('R');
-                } else {
-                    cell.classList.add('empty');
-                    cell.classList.remove('R', 'Y');
-                }
-            });
-        }
-
-        // Starte das Spiel
-        createBoard();
-    </script>
-</body>
+        <table>
+            <tr>
+                <td id="15"></td>
+                <td id="25"></td>
+                <td id="35"></td>
+                <td id="45"></td>
+                <td id="55"></td>
+                <td id="65"></td>
+                <td id="75"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td id="14"></td>
+                <td id="24"></td>
+                <td id="34"></td>
+                <td id="44"></td>
+                <td id="54"></td>
+                <td id="64"></td>
+                <td id="74"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td id="13"></td>
+                <td id="23"></td>
+                <td id="33"></td>
+                <td id="43"></td>
+                <td id="53"></td>
+                <td id="63"></td>
+                <td id="73"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td id="12"></td>
+                <td id="22"></td>
+                <td id="32"></td>
+                <td id="42"></td>
+                <td id="52"></td>
+                <td id="62"></td>
+                <td id="72"></td>
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td id="11"></td>
+                <td id="21"></td>
+                <td id="31"></td>
+                <td id="41"></td>
+                <td id="51"></td>
+                <td id="61"></td>
+                <td id="71"></td>
+            </tr>
+        </table>     
+    </body>
 </html>
