@@ -14,8 +14,6 @@ $username = $_SESSION['username'];
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>Vier Gewinnt</title>
 </head>
@@ -38,7 +36,6 @@ $username = $_SESSION['username'];
         <!-- Spielfeld -->
         <div class="game-board">
             <?php 
-            // Spielfeld: 6 Reihen x 7 Spalten (6x7 = 42 Felder insgesamt)
             for ($row = 0; $row < 6; $row++) {
                 for ($col = 0; $col < 7; $col++) {
                     echo "<div class='cell' id='cell-$row-$col'></div>";
@@ -47,17 +44,5 @@ $username = $_SESSION['username'];
             ?>
         </div>
     </div>
-
-    <script>
-        // Beispiel: Hier kannst du später das Spiellogik hinzufügen
-        const buttons = document.querySelectorAll("button1");
-        buttons.forEach(button => {
-            button.addEventListener("click", (event) => {
-                const columnId = event.target.id; // ID der geklickten Spalte
-                console.log("Spalte " + columnId + " wurde angeklickt");
-                // Hier könntest du z.B. die Logik für das Hinzufügen eines Spielsteins in diese Spalte implementieren
-            });
-        });
-    </script>
 </body>
 </html>

@@ -90,9 +90,9 @@ button:hover {
 
 
 button1 {
-    width: 70px;  /* Größe der Buttons */
+    width: 70px;
     padding: 10px;
-    background-color: #007bff; /* Hauptfarbe */
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
@@ -102,11 +102,10 @@ button1 {
 }
 
 button1:hover {
-    background-color: #0056b3; /* Dunklere Farbe beim Hover */
+    background-color: #0056b3;
 }
 
-/* Spielfeld Layout: Verwendung von flexbox */
-.game-board {
+.game-board { /* Flexbox */
     display: grid;
     grid-template-columns: repeat(7, 80px); /* 7 Spalten */
     grid-template-rows: repeat(6, 80px);  /* 6 Reihen */
@@ -114,7 +113,7 @@ button1:hover {
     margin-top: 10px;
 }
 
-.cell {
+.cell { /* Einzelne Zellen */
     width: 80px;
     height: 80px;
     border-radius: 50%; /* Zellen rund machen */
@@ -124,6 +123,7 @@ button1:hover {
     position: relative;
     cursor: pointer;
     transition: background-color 0.3s ease;
+
 }
 
 /* Styling für die Spielsteine */
