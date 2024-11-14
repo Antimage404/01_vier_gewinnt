@@ -3,7 +3,7 @@ session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Verbindung zur Datenbank
+
 $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
 
 if ($connection->connect_error) {
@@ -16,17 +16,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = htmlspecialchars(trim($_POST['username']));
     $password = trim($_POST['password']);
 
-    // Registrierung
+   
     if (isset($_POST['register'])) {
         if (empty($username) || empty($password)) {
             header('Location: login.html?error=Benutzername und Passwort dürfen nicht leer sein');
             exit();
         }
 
-        // Passwort hashen
+      
         $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
-        // Überprüfen, ob der Benutzername bereits existiert
+        
         $checkSql = "SELECT * FROM users WHERE benutzername = ?";
         $checkStmt = $connection->prepare($checkSql);
         $checkStmt->bind_param("s", $username);
@@ -34,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $checkResult = $checkStmt->get_result();
 
         if ($checkResult->num_rows == 0) {
-            // Benutzer erstellen
+            
             $insertSql = "INSERT INTO users (benutzername, passwort) VALUES (?, ?)";
             $insertStmt = $connection->prepare($insertSql);
             $insertStmt->bind_param("ss", $username, $passwordHash);
@@ -53,6 +53,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
         $checkStmt->close();
     }
+
+
+
+
 
     // Login
     else {
@@ -77,7 +81,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $user['benutzername'];
 
-                header('Location: oberflaeche.php'); // Erfolgreich eingeloggt, weiter zur Spielfeld-Seite
+
+
+
+                
+                header('Location: oberflaeche.php'); // Erfolgreich eingeloggt
                 exit();
             } else {
                 header('Location: login.html?error=Ungültige Anmeldedaten');
