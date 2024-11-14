@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $_SESSION['loggedin'] = true;
                 $_SESSION['username'] = $user['benutzername'];
 
-                header('Location: spielfeld.html'); // Erfolgreich eingeloggt, weiter zur Spielfeld-Seite
+                header('Location: oberflaeche.php'); // Erfolgreich eingeloggt, weiter zur Spielfeld-Seite
                 exit();
             } else {
                 header('Location: login.html?error=Ungültige Anmeldedaten');
