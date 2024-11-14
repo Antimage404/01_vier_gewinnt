@@ -29,8 +29,6 @@ CREATE TABLE `users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `users` (`passwort`, `id`, `benutzername`, `score`, `url`)
-VALUES ('test', '1', 'test', '109', 'www');
 
 
 -- 2024-10-17 10:24:31
