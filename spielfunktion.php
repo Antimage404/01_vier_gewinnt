@@ -1,7 +1,4 @@
 <?php
-session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
 /*die html braucht:
     id: active user, (this) user, column id (der button)
@@ -20,7 +17,7 @@ if(test_active_user()) {
 
         $zugnumnmer = get_max_zugnummer();
         $rowcolumn = setField($column);   
-        add_to_column($rowcolumn);
+        add_to_column($column, $zugnumnmer);
         if(check_win_condition()) {
             assign_win($user);
         }
@@ -88,7 +85,7 @@ function test_free_column($column) {
 }
 
 //fügt der Spalte eins für den entsprechenden Spieler hinzu
-function add_to_column($rowcolumn) {
+function add_to_column($column, $zugnr) {
     $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
 
     if ($connection->connect_error) {
@@ -97,7 +94,7 @@ function add_to_column($rowcolumn) {
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {        
         $sqlInsert = "  INSERT INTO currentgame(zugnr, user, feld)
-                        VALUES(:zugnr, :user, :rowcolumn)";
+                        VALUES($zugnr, $user, $column)";
         $stmt = $connection->prepare($sqlInsert);
         $stmt->execute();
         $stmt->close();
