@@ -1,5 +1,7 @@
 <?php
-
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 /*die html braucht:
     id: active user, (this) user, column id (der button)
@@ -8,13 +10,18 @@
 */
 $column = $_POST['column'];  //id der column
 $user = $_POST['user'];
+$active_user = $_POST['active_user'];
+echo $column;
+//echo "A";
+if(test_active_user()) {
+    //echo "a";
+    if(test_free_column($column)) {
+        echo "b";
 
-if(test_active_user() == true) {
-    if(test_free_column() == true) {
         $zugnumnmer = get_max_zugnummer();
         $rowcolumn = setField($column);   
         add_to_column($rowcolumn);
-        if(check_win_condition) {
+        if(check_win_condition()) {
             assign_win($user);
         }
     }
@@ -24,7 +31,7 @@ if(test_active_user() == true) {
 
 //überprüfen, ob der Spieler an der Reihe ist
 function test_active_user() {
-    if($_POST['active_user'] == $user) return true;
+    if($active_user == $user) return true;
     else return false;
 }
 
@@ -39,12 +46,14 @@ function get_max_zugnummer() {
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
-        $sql = "SELECT max(zugnummer) FROM currentgame";
-        $stmt = $connection->prepare($sql);    
+        $sql = "SELECT max(zugnr) FROM currentgame";
+
+        $stmt = $connection->prepare($sql);
         $stmt->execute();
         $result= $stmt->get_result();
         $stmt->close();
 
+        if($result == null) $result = 0;
         return $result +1;
 
 
@@ -53,7 +62,7 @@ function get_max_zugnummer() {
 }
 
 //überprüft, ob die angegebene Spalte bereits voll ist
-function test_free_column() {
+function test_free_column($column) {
     $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
 
 
@@ -62,12 +71,13 @@ function test_free_column() {
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
-        $sql = "SELECT * FROM currentgame WHERE feld = $column ";
+        $sql = "SELECT count(*) FROM currentgame WHERE feld = $column ";
+        echo $sql;
         $stmt = $connection->prepare($sql);    
         $stmt->execute();
         $result= $stmt->get_result();
         $stmt->close();
-        if ($result->num_rows < 6) {
+        if ($result < 6) {
             return true;
         }
         else {
@@ -86,7 +96,7 @@ function add_to_column($rowcolumn) {
     }
     
     if ($_SERVER["REQUEST_METHOD"] == "POST") {        
-        $sqlInsert = "  INSERT INTO currentgame(zugnummer, user, feld)
+        $sqlInsert = "  INSERT INTO currentgame(zugnr, user, feld)
                         VALUES(:zugnr, :user, :rowcolumn)";
         $stmt = $connection->prepare($sqlInsert);
         $stmt->execute();
@@ -136,7 +146,7 @@ function check_win_condition() {
         $stmt->execute();
         $result= $stmt->fetch_row();
         $fieldArray = array();
-        asort(fieldArray);
+        sort($fieldArray);
         $counter = 0;
         while(true) {
             $fieldArray[$counter] = $result;
@@ -149,8 +159,8 @@ function check_win_condition() {
         $column4 = false;
         $colArray = array();
 
-        for(int i = 0;i < 8; i++) {
-            colArray[i] = 0; 
+        for($i = 0;$i < 8; $i++) {
+            $colArray[i] = 0; 
         }
         $counter = 0;
 
@@ -165,13 +175,13 @@ function check_win_condition() {
             return false;
         }
         //wenn 4 Steine in einer Spalte sind, wird geprüft ob diese benachbart sind
-        for(int i = 0;i < 8; i++) {
-            if($colArray[i] > 4){
+        for($i = 0;$i < 8; $i++) {
+            if($colArray[$i] > 4){
                 $last = 1;
                 $count = 0;
-                for(int j = 0; j < count($fieldArray); j++) {
-                    if($fieldArray[j] / 10 = i) {
-                        if ($last + 1 = $fieldArray[j]) {
+                for($j = 0; $j < count($fieldArray); $j++) {
+                    if($fieldArray[$j] / 10 == $i) {
+                        if ($last + 1 == $fieldArray[$j]) {
                             $count = $count +1;
                             if ($count = 4) {
                                 return true;
@@ -198,13 +208,13 @@ function check_win_condition() {
             return false;
         }
         //wenn 4 Steine in einer Zeile sind, wird geprüft ob diese benachbart sind
-        for(int i = 0;i < 8; i++) {
-            if($rowArray[i] > 4){
+        for($i = 0;$i < 8; $i++) {
+            if($rowArray[$i] > 4){
                 $last = 1;
                 $count = 0;
-                for(int j = 0; j < count($fieldArray); j++) {
-                    if($fieldArray[j] % 10 = i) {
-                        if ($last + 10 = $fieldArray[j]) {
+                for($j = 0; $j < count($fieldArray); $j++) {
+                    if($fieldArray[$j] % 10 == $i) {
+                        if ($last + 10 == $fieldArray[$j]) {
                             $count = $count + 1;
                             if ($count = 4) {
                                 return true;
@@ -212,7 +222,7 @@ function check_win_condition() {
                         } else {
                             $count = 1;
                         }
-                        $last = $fieldArray[j];
+                        $last = $fieldArray[$j];
 
                     }
                 }
