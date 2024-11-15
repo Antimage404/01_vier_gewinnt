@@ -2,24 +2,18 @@
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-/*die html braucht:
-    id: active user, (this) user, column id (der button)
-    jeder Kreis braucht eine id mit der form columnid || rowid, z.B. 23
 
-*/
-$column = (int) $_POST['column'];  //id der column
+$column = (int) $_POST['column'];
 //$user = $_SESSION['id'];
 //$active_user = $_SESSION['user_id'];
-$user = 11;
-$active_user = 11;
+//$user = 1; //test
+//$active_user = 1; //test
 
 echo $user;
 echo $active_user;
 echo $column;
 
-//echo "A";
 if(test_active_user($active_user, $user)) {
-    //echo "a";
     if(test_free_column($column)) {
         echo "b";
 
@@ -77,7 +71,6 @@ function test_free_column($column) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
         $sql = "SELECT count(*) as count FROM currentgame WHERE feld = $column ";
-        echo $sql;
         $stmt = $connection->prepare($sql);    
         $stmt->execute();
         $result= $stmt->get_result();
@@ -120,19 +113,17 @@ function setField($column, $zugnumnmer, $user) {
         die("Verbindung fehlgeschlagen: " . $connection->connect_error);
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {        
-        $sqlInsert = "  INSERT INTO currentgame(zugnummer, user, feld)
-                        VALUES(?, ?, ?)";
-        echo "z".$zugnumnmer."u". $user."c". $column;
+        $sqlInsert = "INSERT INTO currentgame(zugnr, user, feld)
+                        VALUES($zugnumnmer, $user, $column)";
+        echo $sqlInsert;
         $stmt = $connection->prepare($sqlInsert);
-        $stmt->bind_param('iii',$zugnumnmer, $user, $column);
         $stmt->execute();
-
-
+        //funktioniert bis hierher
 
         $sql = "SELECT count(*) as count FROM currentgame WHERE feld = $column ";
         $stmt = $connection->prepare($sql);
         $stmt->execute();
-        $result= $stmt->get_result();
+        $result= $stmt->get_result()->fetch_assoc();
         $row= $result['count'] + 1;
         $stmt->close();
 
