@@ -82,27 +82,11 @@ button {
     font-size: 1em;
     cursor: pointer;
     transition: background-color 0.3s;
+    margin-right: 10px;
 }
 
 button:hover {
     background-color: #0056b3; /* Dunklere Farbe beim Hover */
-}
-
-
-button1 {
-    width: 70px;
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1.2em;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-button1:hover {
-    background-color: #0056b3;
 }
 
 .game-board { /* Flexbox */
@@ -161,17 +145,5 @@ a:hover {
     margin-top: 15px;
     font-weight: bold;
     color: #d9534f; /* Farbe für Fehlermeldungen */
-}
-
-
-/* Stil für die hervorgehobenen Zellen */
-.highlight {
-    background-color: rgba(0, 0, 255, 0.3); /* Hellblaue Farbe */
-    border: 2px solid #0000ff; /* Blauer Rand */
-}
-
-/* Optionaler Hover-Effekt für die Zellen */
-.cell:hover {
-    background-color: #cccccc; /* Etwas dunklerer Hover-Effekt */
 }
 
