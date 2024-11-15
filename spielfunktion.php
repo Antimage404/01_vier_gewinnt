@@ -1,22 +1,30 @@
 <?php
-
+session_start();
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 /*die html braucht:
     id: active user, (this) user, column id (der button)
     jeder Kreis braucht eine id mit der form columnid || rowid, z.B. 23
 
 */
-$column = $_POST['column'];  //id der column
-$user = $_POST['user'];
-$active_user = $_POST['active_user'];
+$column = (int) $_POST['column'];  //id der column
+//$user = $_SESSION['id'];
+//$active_user = $_SESSION['user_id'];
+$user = 11;
+$active_user = 11;
+
+echo $user;
+echo $active_user;
 echo $column;
+
 //echo "A";
-if(test_active_user()) {
+if(test_active_user($active_user, $user)) {
     //echo "a";
     if(test_free_column($column)) {
         echo "b";
 
         $zugnumnmer = get_max_zugnummer();
-        $rowcolumn = setField($column);   
+        $rowcolumn = setField($column, $zugnumnmer, $user);   
         add_to_column($column, $zugnumnmer);
         if(check_win_condition()) {
             assign_win($user);
@@ -27,7 +35,7 @@ if(test_active_user()) {
 
 
 //überprüfen, ob der Spieler an der Reihe ist
-function test_active_user() {
+function test_active_user($active_user, $user) {
     if($active_user == $user) return true;
     else return false;
 }
@@ -43,15 +51,15 @@ function get_max_zugnummer() {
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
-        $sql = "SELECT max(zugnr) FROM currentgame";
+        $sql = "SELECT max(zugnr) as zugnr FROM currentgame";
 
         $stmt = $connection->prepare($sql);
         $stmt->execute();
-        $result= $stmt->get_result();
+        $result= $stmt->get_result()->fetch_assoc();
         $stmt->close();
 
-        if($result == null) $result = 0;
-        return $result +1;
+        if($result['zugnr'] == null) $result = 0;
+        return $result['zugnr'] +1;
 
 
 
@@ -68,13 +76,13 @@ function test_free_column($column) {
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
    
-        $sql = "SELECT count(*) FROM currentgame WHERE feld = $column ";
+        $sql = "SELECT count(*) as count FROM currentgame WHERE feld = $column ";
         echo $sql;
         $stmt = $connection->prepare($sql);    
         $stmt->execute();
         $result= $stmt->get_result();
         $stmt->close();
-        if ($result < 6) {
+        if ( $result->fetch_assoc()['count'] < 6) {
             return true;
         }
         else {
@@ -105,8 +113,7 @@ function add_to_column($column, $zugnr) {
 
 
 //färbt den Kreis in der Farbe des Spielers 
-function setField($column) {
-
+function setField($column, $zugnumnmer, $user) {
     //suche die Anzahl der Steine in der Spalte
     $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
     if ($connection->connect_error) {
@@ -114,10 +121,19 @@ function setField($column) {
     }
     if ($_SERVER["REQUEST_METHOD"] == "POST") {        
         $sqlInsert = "  INSERT INTO currentgame(zugnummer, user, feld)
-                        VALUES(:zugnr, :user, :column)";
+                        VALUES(?, ?, ?)";
+        echo "z".$zugnumnmer."u". $user."c". $column;
         $stmt = $connection->prepare($sqlInsert);
+        $stmt->bind_param('iii',$zugnumnmer, $user, $column);
         $stmt->execute();
-        $row= $stmt->get_result();
+
+
+
+        $sql = "SELECT count(*) as count FROM currentgame WHERE feld = $column ";
+        $stmt = $connection->prepare($sql);
+        $stmt->execute();
+        $result= $stmt->get_result();
+        $row= $result['count'] + 1;
         $stmt->close();
 
         $rowcolumn = $column || $row;
