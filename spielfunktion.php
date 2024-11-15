@@ -15,7 +15,6 @@ echo $column;
 
 if(test_active_user($active_user, $user)) {
     if(test_free_column($column)) {
-        echo "b";
 
         $zugnumnmer = get_max_zugnummer();
         $rowcolumn = setField($column, $zugnumnmer, $user);   
@@ -115,7 +114,6 @@ function setField($column, $zugnumnmer, $user) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {        
         $sqlInsert = "INSERT INTO currentgame(zugnr, user, feld)
                         VALUES($zugnumnmer, $user, $column)";
-        echo $sqlInsert;
         $stmt = $connection->prepare($sqlInsert);
         $stmt->execute();
         //funktioniert bis hierher
