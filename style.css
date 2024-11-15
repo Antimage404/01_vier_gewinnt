@@ -89,6 +89,16 @@ button:hover {
     background-color: #0056b3; /* Dunklere Farbe beim Hover */
 }
 
+
+
+.button_game {
+    font-size: 15px;
+}
+
+.button_login {
+    font-size: 10px;
+}
+
 .game-board { /* Flexbox */
     display: grid;
     grid-template-columns: repeat(7, 80px); /* 7 Spalten */
