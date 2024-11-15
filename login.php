@@ -1,104 +1,46 @@
 <?php
 session_start();
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 
+// Verbindung zur Datenbank herstellen (Beispiel)
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "viergewinnt";
 
-$connection = new mysqli("localhost", "root", "", "vier_gewinnt");
+$conn = new mysqli($servername, $username, $password, $dbname);
 
-if ($connection->connect_error) {
-    die("Verbindung fehlgeschlagen: " . $connection->connect_error);
+// Überprüfen der Verbindung
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Wenn das Formular über POST abgesendet wird
+// Wenn das Formular abgeschickt wurde
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
 
-    $username = htmlspecialchars(trim($_POST['username']));
-    $password = trim($_POST['password']);
+    // Datenbankabfrage, um Benutzer zu authentifizieren
+    $sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("ss", $username, $password);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-   
-    if (isset($_POST['register'])) {
-        if (empty($username) || empty($password)) {
-            header('Location: login.html?error=Benutzername und Passwort dürfen nicht leer sein');
-            exit();
-        }
-
-      
-        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-
+    if ($result->num_rows == 1) {
+        // Benutzer gefunden, Session starten
+        $user = $result->fetch_assoc();
         
-        $checkSql = "SELECT * FROM users WHERE benutzername = ?";
-        $checkStmt = $connection->prepare($checkSql);
-        $checkStmt->bind_param("s", $username);
-        $checkStmt->execute();
-        $checkResult = $checkStmt->get_result();
+        // Session-Variablen setzen
+        $_SESSION['loggedin'] = true;
+        $_SESSION['username'] = $user['username'];
+        $_SESSION['user_id'] = $user['id'];  // Die Benutzer-ID wird hier gespeichert
 
-        if ($checkResult->num_rows == 0) {
-            
-            $insertSql = "INSERT INTO users (benutzername, passwort) VALUES (?, ?)";
-            $insertStmt = $connection->prepare($insertSql);
-            $insertStmt->bind_param("ss", $username, $passwordHash);
-
-            if ($insertStmt->execute()) {
-                header('Location: login.html?error=Registrierung erfolgreich! Du kannst dich nun einloggen');
-                exit();
-            } else {
-                header('Location: login.html?error=Fehler bei der Registrierung');
-                exit();
-            }
-            $insertStmt->close();
-        } else {
-            header('Location: login.html?error=Benutzername bereits vergeben');
-            exit();
-        }
-        $checkStmt->close();
-    }
-
-
-
-
-
-    // Login
-    else {
-        if (empty($username) || empty($password)) {
-            header('Location: login.html?error=Benutzername und Passwort dürfen nicht leer sein');
-            exit();
-        }
-
-        // Benutzer suchen
-        $sql = "SELECT * FROM users WHERE benutzername = ?";
-        $stmt = $connection->prepare($sql);
-        $stmt->bind_param("s", $username);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $user = $result->fetch_assoc();
-
-            // Passwort überprüfen
-            if (password_verify($password, $user['passwort'])) {
-                session_regenerate_id(true); // Session neu generieren
-                $_SESSION['loggedin'] = true;
-                $_SESSION['username'] = $user['benutzername'];
-
-
-
-
-                
-                header('Location: oberflaeche.php'); // Erfolgreich eingeloggt
-                exit();
-            } else {
-                header('Location: login.html?error=Ungültige Anmeldedaten');
-                exit();
-            }
-        } else {
-            header('Location: login.html?error=Benutzername nicht gefunden');
-            exit();
-        }
-        $stmt->close();
+        // Weiterleitung zur Spielfeldseite
+        header('Location: oberflaeche.php');
+        exit();
+    } else {
+        // Fehlermeldung, wenn Login fehlschlägt
+        echo "<p>Ungültige Anmeldedaten. Versuchen Sie es erneut.</p>";
     }
 }
-
-$connection->close();
 ?>
-
