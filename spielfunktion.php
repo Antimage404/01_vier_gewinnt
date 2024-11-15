@@ -6,8 +6,8 @@ ini_set('display_errors', 1);
 $column = (int) $_POST['column'];
 //$user = $_SESSION['id'];
 //$active_user = $_SESSION['user_id'];
-//$user = 1; //test
-//$active_user = 1; //test
+$user = 1; //test
+$active_user = 1; //test
 
 echo $user;
 echo $active_user;
