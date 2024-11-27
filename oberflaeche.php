@@ -1,4 +1,4 @@
-//Tutubalin (Antimage404)
+<-- Tutubalin (Antimage404) -->
 
 <?php
 session_start();
