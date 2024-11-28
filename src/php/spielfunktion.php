@@ -21,6 +21,9 @@ if(test_active_user($active_user, $user)) {
         } else{
             createNewField();
         }
+    } else{
+        header('Location: oberflaeche.php');
+        exit(); 
     }
 }
 
