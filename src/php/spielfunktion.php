@@ -1,5 +1,6 @@
-//Christian Notheisen
 <?php
+//Christian Notheisen
+
 session_start();
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
@@ -10,18 +11,15 @@ $column = (int) $_POST['column'];
 $user = 1; //test
 $active_user = 1; //test
 
-echo $user;
-echo $active_user;
-echo $column;
-
 if(test_active_user($active_user, $user)) {
     if(test_free_column($column)) {
 
         $zugnumnmer = get_max_zugnummer();
-        $rowcolumn = setField($column, $zugnumnmer, $user);   
-        add_to_column($column, $zugnumnmer);
+        $rowcolumn = setField($column, $zugnumnmer, $user); 
         if(check_win_condition()) {
             assign_win($user);
+        } else{
+            createNewField();
         }
     }
 }
@@ -85,26 +83,6 @@ function test_free_column($column) {
     }
 }
 
-//fügt der Spalte eins für den entsprechenden Spieler hinzu
-function add_to_column($column, $zugnr) {
-    $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
-
-    if ($connection->connect_error) {
-        die("Verbindung fehlgeschlagen: " . $connection->connect_error);
-    }
-    
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {        
-        $sqlInsert = "  INSERT INTO currentgame(zugnr, user, feld)
-                        VALUES($zugnr, $user, $column)";
-        $stmt = $connection->prepare($sqlInsert);
-        $stmt->execute();
-        $stmt->close();
-    } else {
-        echo "Ungültige Anforderung.";
-    }
-}
-
-
 //färbt den Kreis in der Farbe des Spielers 
 function setField($column, $zugnumnmer, $user) {
     //suche die Anzahl der Steine in der Spalte
@@ -117,7 +95,6 @@ function setField($column, $zugnumnmer, $user) {
                         VALUES($zugnumnmer, $user, $column)";
         $stmt = $connection->prepare($sqlInsert);
         $stmt->execute();
-        //funktioniert bis hierher
 
         $sql = "SELECT count(*) as count FROM currentgame WHERE feld = $column ";
         $stmt = $connection->prepare($sql);
@@ -135,8 +112,10 @@ function setField($column, $zugnumnmer, $user) {
 
 //überprüft, ob das Spiel für den aktiven Spieler zu Ende ist
 function check_win_condition() {
+    return false;
     $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
 
+    
 
     if ($connection->connect_error) {
         die("Verbindung fehlgeschlagen: " . $connection->connect_error);
@@ -234,12 +213,62 @@ function check_win_condition() {
 
 
 
-        //überprüft, ob schräg 4 Steine nebeneinander sind fehlt
+        //überprüft, ob schräg 4 Steine nebeneinander sind: fehlt
 
         $stmt->close();
         return false;
     }
 }
+
+
+//soll das Spielfeld mit den entsprechenden Farben neu erstellen: holt sich dazu die Züge aus der Datenbank und spielt sie hintereinander durch
+function createNewField() {
+    $connection = new mysqli("localhost", "root", "", "vier_gewinnt");
+    if ($connection->connect_error) {
+        die("Verbindung fehlgeschlagen: " . $connection->connect_error);
+    }
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $sql = "SELECT feld FROM currentgame";
+        $stmt = $connection->prepare($sql);    
+        $stmt->execute();
+        //$result = $stmt->fetch_row();
+        $script = "<script>";
+        $fieldArray = array();
+        $fieldArray[0] = 5;
+        $fieldArray[1] = 5;
+        $fieldArray[2] = 5;
+        $fieldArray[3] = 5;
+        $fieldArray[4] = 5;
+        $fieldArray[5] = 5;
+        header('Location: oberflaeche.php');
+        exit();
+
+        while (true) {
+            $result = $stmt->fetch_row();
+            if ($result == null) break;
+            $column = $result['feld'];
+            $row = $fieldArray[$column];
+            $fieldArray[$column] = $fieldArray[$column] - 1;
+            $cell = "cell-" . $row . "-". $column;
+
+            $script = $script || " ( '".$cell."' ).css('display', 'none');
+            <";
+            echo "test";
+
+            header('Location: oberflaeche.php');
+            exit();
+
+            break;
+
+        }
+
+        
+
+        }
+
+    }
+
+
 
 
 
