@@ -1,4 +1,5 @@
 <?php
+// Tutubalin (Antimage404)
 require 'db_connection.php';
 
 $gameId = $_GET['game_id'];
