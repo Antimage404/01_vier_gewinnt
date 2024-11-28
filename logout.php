@@ -1,6 +1,5 @@
-<!-- Tutubalin (Antimage404) -->
-
 <?php
+// Tutubalin (Antimage404)
 session_start();
 
 
