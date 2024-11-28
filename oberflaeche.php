@@ -1,5 +1,5 @@
 <?php
-<!-- Tutubalin (Antimage404) -->
+// Tutubalin (Antimage404)
 session_start();
 
 // Überprüfen, ob der Benutzer eingeloggt ist
