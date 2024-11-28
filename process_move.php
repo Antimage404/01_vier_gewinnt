@@ -1,4 +1,6 @@
 <?php
+//Christian Notheisen
+
 require 'db_connection.php';
 
 $gameId = $_POST['game_id'] ?? null;
