@@ -1,4 +1,6 @@
 <?php
+//Christian Notheisen
+
 $host = '127.0.0.1';
 $db = 'connect_four';
 $user = 'root';
