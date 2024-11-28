@@ -1,4 +1,5 @@
 <?php
+// Tutubalin (Antimage404)
 require 'db_connection.php';
 
 // Fetch the last 10 completed games
