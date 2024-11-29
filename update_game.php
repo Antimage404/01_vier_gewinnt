@@ -1,4 +1,5 @@
 <?php
+//Weinstein
 require 'db_connection.php';
 
 $gameId = $_GET['game_id'];
