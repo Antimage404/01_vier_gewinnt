@@ -1,3 +1,4 @@
+//Weinstein
 // Variablen für Spiel-ID und Spielername aus der URL holen
 const gameId = new URLSearchParams(window.location.search).get('game_id');
 const playerName = new URLSearchParams(window.location.search).get('player_name');
