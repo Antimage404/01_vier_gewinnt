@@ -1,25 +1,29 @@
 <?php
+// Wir stellen die Verbindung zur Datenbank her
 require 'db_connection.php';
 
+// Wir holen die Spiel-ID und den Spielernamen aus den GET-Daten
 $gameId = $_GET['game_id'];
 $playerName = $_GET['player_name'];
 
-// Lade Spielinformationen
+// Lade die Spielinformationen aus der Datenbank anhand der Spiel-ID
 $stmt = $pdo->prepare("SELECT * FROM games WHERE id = ?");
 $stmt->execute([$gameId]);
 $game = $stmt->fetch();
 
+// Wenn das Spiel nicht gefunden wurde, brechen wir ab
 if (!$game) {
     die("Game not found.");
 }
 
-// Prüfe Spielstatus und leite nur weiter, wenn das Spiel bereit ist
+// Prüfen, ob der Status des Spiels 'ongoing' ist und ob ein zweiter Spieler vorhanden ist
+// Falls ja, leiten wir den Spieler zur Spielseite weiter
 if ($game['player2_name'] !== null && $game['status'] === 'ongoing') {
     header("Location: play.php?game_id=$gameId&player_name=$playerName");
     exit;
 }
 
-// Wenn kein zweiter Spieler da ist, warte weiter
+// Falls noch kein zweiter Spieler da ist, bleibt der Spieler in der Warteschlange
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,8 +31,10 @@ if ($game['player2_name'] !== null && $game['status'] === 'ongoing') {
     <meta charset="UTF-8">
     <title>Waiting Room</title>
     <link rel="stylesheet" href="assets/css/style.css">
-    <meta http-equiv="refresh" content="5"> <!-- Aktualisiert alle 5 Sekunden -->
+    <!-- Die Seite wird alle 5 Sekunden automatisch neu geladen -->
+    <meta http-equiv="refresh" content="5">
     <style>
+        /* Grundlegendes Styling für die Seite */
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f3f4f6;
@@ -96,6 +102,7 @@ if ($game['player2_name'] !== null && $game['status'] === 'ongoing') {
     </style>
 </head>
 <body>
+    <!-- Hier wird die Warteseiten-UI angezeigt -->
     <div class="container">
         <h1>Waiting Room</h1>
         <p>Game ID: <?= htmlspecialchars($gameId) ?></p>
@@ -108,3 +115,4 @@ if ($game['player2_name'] !== null && $game['status'] === 'ongoing') {
     </div>
 </body>
 </html>
+
