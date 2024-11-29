@@ -26,7 +26,7 @@ Dieses Projekt implementiert das klassische "Vier Gewinnt"-Spiel als browserbasi
    - Standardmäßig erreichbar unter: [http://localhost/phpmyadmin](http://localhost/phpmyadmin).
 2. Erstelle eine neue Datenbank:
    - Klicke im linken Menü auf **"Neu"**.
-   - Gib den Namen `vier_gewinnt` ein und wähle den Zeichensatz `utf8mb4_general_ci`.
+   - Gib den Namen `connect_four` ein und wähle den Zeichensatz `utf8mb4_general_ci`.
 3. Erstelle die Tabelle `games`:
    - Öffne die SQL-Konsole in phpMyAdmin und füge den folgenden Befehl ein:
      ```sql
